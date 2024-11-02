@@ -46,6 +46,8 @@ const Header = () => {
             </div>
           </div>
         </div>
+        <h1 className="text-3xl font-bold text-gray-800 mb-8 text-center">
+        Help US Find These People </h1>
       </header>
     );
   };

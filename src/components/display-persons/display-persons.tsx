@@ -14,7 +14,7 @@ const DisplayPersons = () => {
   return (
     <div className="container mx-auto px-4 py-8">
       <h1 className="text-3xl font-bold text-gray-800 mb-8 text-center">
-Help US Find These People      </h1>
+Help US Find These People </h1>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {missingPersons.map((person) => (
@@ -35,7 +35,7 @@ Help US Find These People      </h1>
               </div>
 
               {/* Last Seen Section */}
-              <div className="py-4 border-b">
+              <div className="  py-4 border-b">
                 <h3 className="text-md font-medium text-gray-700 mb-2">Last Seen</h3>
                 <p className="text-gray-600">Location: {person.lastseen_location}</p>
                 <p className="text-gray-600">Date: {person.lastseen_date}</p>

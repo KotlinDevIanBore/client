@@ -1,12 +1,24 @@
 import { createContext, ReactNode, useEffect, useState } from "react";
 import { getMissingPersons } from "../../api/api";
+import { Person } from "../../types/person";
+
+interface PersonContextType {
+
+    missingPersons:Person [];
+    isLoading :boolean;
+    error :string|null;
+}
+
+
+const defaultValue: PersonContextType = {
+    missingPersons: [],
+    isLoading: false,
+    error: null
+};
 
 
 
-
-const defaultValue = {};
-
-const displayPersonsContext = createContext(defaultValue);
+export const DisplayPersonsContext = createContext<PersonContextType>(defaultValue);
 
 
 
@@ -17,28 +29,36 @@ interface DisplayPersonsProviderProps {
 
 const DisplayPersonsProvider = ({children}:DisplayPersonsProviderProps)=>{
 
-    const [missingPersons,setMissingPersons] = useState ([])
+    const [missingPersons,setMissingPersons] = useState <Person[]> ([])
+
+    const [isLoading,setIsLoading] = useState (false)
+
+    const [error, setError] = useState<string | null>(null);
 
 
-    useEffect(()=>{
+    useEffect(() => {
+        async function fetchMissingPersons() {
+            setIsLoading(true);
+            try {
+                const fetchedPersons = await getMissingPersons();
+                setMissingPersons(fetchedPersons);
+            } catch (err) {
+                setError(err instanceof Error ? err.message : 'An error occurred');
+            } finally {
+                setIsLoading(false);
+            }
+        }
 
-        async function fetchMissingPersons(){const missingPersons = await getMissingPersons();
-
-            setMissingPersons (missingPersons)
-         }
-
-        fetchMissingPersons()
-
-
-    }, [])
+        fetchMissingPersons();
+    }, []);
 
 
 
-    return <displayPersonsContext.Provider value={missingPersons}>
+    return <DisplayPersonsContext.Provider value={{missingPersons,isLoading,error}}>
 
         {children}
 
-    </displayPersonsContext.Provider>
+    </DisplayPersonsContext.Provider>
 }
 
 

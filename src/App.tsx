@@ -8,7 +8,7 @@ function App() {
 
   return (
     <>
-Another project fuckers
+
 <DisplayPersonsWrapper/>
 
     </>

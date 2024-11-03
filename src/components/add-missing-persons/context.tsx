@@ -2,7 +2,6 @@ import { createContext, ReactNode, useState } from "react"
 import { PersonWithoutId } from "../../types/person";
 import formFields from "./form-fields";
 import { createMissingPerson } from "../../api/api";
-import useFormDataToObject from "./hooks/form-data-to-object";
 
 
 export interface AddPersonContextType {
@@ -38,7 +37,8 @@ interface AddpersonProviderProps {
 
 const AddPersonProvider = ({children}:AddpersonProviderProps)=>{
     const [input, setInput] = useState<Partial<PersonWithoutId>>({});
-    const { formDataToObject } = useFormDataToObject();
+    const [uploadFile, setUploadFile] = useState<File | null>(null);
+   
    
 
     
@@ -56,18 +56,24 @@ const AddPersonProvider = ({children}:AddpersonProviderProps)=>{
           input.lastseen_date ||
           input.contact_person ||
           input.contact_phone ||
-          input.contact_email
+          input.contact_email ||uploadFile
         ) {
           const formData  = new FormData();
           formFields.forEach((field) => {
             formData.append(field.name, input[field.name] as string);
           }) 
+
+          if (uploadFile){
+            formData.append("image_url",uploadFile)
+          }
           try {
 
 
-          const  formattedFormData = formDataToObject (formData)
+          // const  formattedFormData = formDataToObject (formData)
 
-           const response = await createMissingPerson(formattedFormData as PersonWithoutId );
+          //  const response = await createMissingPerson(formattedFormData as PersonWithoutId );
+          const response = await createMissingPerson(formData);
+
 
            if (response.status ===200){
             alert ('missing person added')
@@ -88,8 +94,21 @@ const AddPersonProvider = ({children}:AddpersonProviderProps)=>{
        
       }
       function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
-        const { value, name } = e.target;
-        setInput((prevInput) => ({ ...prevInput, [name]: value }));
+        const { value, name, files } = e.target;
+
+
+        if (name === "image_url" && files && files.length>0){
+
+       const file = files[0]
+
+       setUploadFile(file)
+
+
+
+        } else {
+          setInput((prevInput) => ({ ...prevInput, [name]: value }));
+        }
+        
       }
 
 const contextValue: AddPersonContextType ={

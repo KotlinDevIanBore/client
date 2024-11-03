@@ -1,4 +1,4 @@
-import { createMissingPerson, getMissingPersons } from "../../api/api"
+import {  createMissingPersonTest, getMissingPersons } from "../../api/api"
 import {  PersonWithoutId } from "../../types/person"
 import { TestEnvironment } from "../setup/testEnvironment"
 
@@ -28,7 +28,7 @@ describe('Person API Integration Tests', ()=>{
             contact_email: "integration.test@example.com"
         };
 
-        const response = await createMissingPerson (newPerson);
+        const response = await createMissingPersonTest (newPerson);
 
         expect (response.status).toBe(201);
         expect (response.error).toBeUndefined()
@@ -52,7 +52,7 @@ describe('Person API Integration Tests', ()=>{
             contact_email: "not an email"   
         };
 
-        const response = await createMissingPerson(invalidPerson);
+        const response = await createMissingPersonTest(invalidPerson);
 
 
         expect (response.status).not.toBe (201)

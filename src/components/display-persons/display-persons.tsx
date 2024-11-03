@@ -1,100 +1,84 @@
 import { useDisplayPersonsContext } from "./hooks/useContext";
+import { Loader2 } from "lucide-react";
+import { useState } from "react";
+import { Person } from "../../types/person";
 
+interface PersonCardProps {
+  person: Person;
+}
+
+const PersonCard = ({ person }: PersonCardProps) => {
+  const [imageError, setImageError] = useState(false);
+  
+  const handleEmailClick = (email:string) => {
+    window.location.href = `mailto:${email}`;
+  };
+
+  return (
+    <div className="border rounded-lg p-4 shadow-sm hover:shadow-md transition-shadow">
+      <div className="relative mb-4">
+        {!imageError ? (
+          <img
+            src={person.image_url}
+            alt={`${person.first_name} ${person.surname}`}
+            className="w-full rounded-md max-h-[500px] object-contain"
+            onError={() => setImageError(true)}
+          />
+        ) : (
+          <div className="w-full h-64 bg-gray-200 flex items-center justify-center rounded-md">
+            <span className="text-gray-500">Image unavailable</span>
+          </div>
+        )}
+      </div>
+
+      <h2 className="text-xl font-semibold mb-2">
+        {person.first_name} {person.middle_name} {person.surname}
+      </h2>
+      
+      <div className="mb-4">
+        <p className="text-gray-700">Age: {person.age}</p>
+        <p className="text-gray-700">Gender: {person.gender}</p>
+      </div>
+
+      <div className="mb-4">
+        <h3 className="font-semibold text-lg">Last Seen</h3>
+        <p className="text-gray-700">Location: {person.lastseen_location}</p>
+        <p className="text-gray-700">Date: {person.lastseen_date}</p>
+      </div>
+
+      <div>
+        <h3 className="font-semibold text-lg">Contact Information</h3>
+        <p className="text-gray-700">Contact: {person.contact_person}</p>
+        <p className="text-gray-700">Phone: {person.contact_phone}</p>
+        <button
+          onClick={() => handleEmailClick(person.contact_email)}
+          className="text-blue-600 hover:underline focus:outline-none"
+        >
+          Contact via email
+        </button>
+      </div>
+    </div>
+  );
+};
 
 const DisplayPersons = () => {
   const { missingPersons, isLoading } = useDisplayPersonsContext();
-  
-  // Loading state
+
   if (isLoading) {
     return (
-      <div className="flex justify-center items-center min-h-screen">
-        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"></div>
+      <div className="flex justify-center items-center h-64">
+        <Loader2 className="animate-spin h-8 w-8 text-gray-500" />
       </div>
     );
   }
 
-  
-
   return (
-    <div className="container mx-auto px-4 py-8">
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {missingPersons.map((person) => (
-          <div 
-            key={person.id} 
-            className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition duration-300"
-          >
-            {/* Image Section */}
-            <div className="relative h-48 bg-gray-100">
-              <img
-                src={person.image_url}
-                alt={`${person.first_name} ${person.surname}`}
-                className="w-full h-full object-cover"
-              />
-              <div className="absolute inset-0 bg-black/10"></div>
-            </div>
-
-            {/* Content Section */}
-            <div className="p-6">
-              {/* Header Section */}
-              <div className="border-b border-gray-200 pb-4">
-                <h2 className="text-xl font-semibold text-gray-800">
-                  {person.first_name} {person.middle_name} {person.surname}
-                </h2>
-                <div className="flex gap-4 mt-2 text-gray-600">
-                  <span>Age: {person.age}</span>
-                  <span>Gender: {person.gender}</span>
-                </div>
-              </div>
-
-              {/* Last Seen Section */}
-              <div className="py-4 border-b border-gray-200">
-                <h3 className="text-md font-medium text-gray-700 mb-2">
-                  Last Seen
-                </h3>
-                <p className="text-gray-600">
-                  Location: {person.lastseen_location}
-                </p>
-                <p className="text-gray-600">
-                  Date: {person.lastseen_date}
-                </p>
-              </div>
-
-              {/* Contact Section */}
-              <div className="pt-4">
-                <h3 className="text-md font-medium text-gray-700 mb-2">
-                  Contact Information
-                </h3>
-                <div className="space-y-1">
-                  <p className="text-gray-600">
-                    Contact: {person.contact_person}
-                  </p>
-                  <p className="text-gray-600">
-                    <span className="font-medium">Phone: </span>
-                    <a
-                      href={`tel:${person.contact_phone}`}
-                      className="text-blue-600 hover:text-blue-800"
-                    >
-                      {person.contact_phone}
-                    </a>
-                  </p>
-                  <p className="text-gray-600">
-                    <span className="font-medium">Email: </span>
-                    <a
-                      href={`mailto:${person.contact_email}`}
-                      className="text-blue-600 hover:text-blue-800"
-                    >
-                      {person.contact_email}
-                    </a>
-                  </p>
-                </div>
-              </div>
-            </div>
-          </div>
-        ))}
-      </div>
-      
+    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 p-4">
+      {missingPersons.map((person) => (
+        <PersonCard key={person.id} person={person} />
+      ))}
       {missingPersons.length === 0 && (
-        <div className="text-center text-gray-600 mt-8">
+        <div className="col-span-full text-center text-gray-500 py-8">
           No missing persons found
         </div>
       )}

@@ -1,7 +1,5 @@
-import React from 'react';
 import { useDisplayPersonsContext } from "./hooks/useContext";
 
-import dummyImage from '../../../public/missingperson.jpeg'
 
 const DisplayPersons = () => {
   const { missingPersons, isLoading } = useDisplayPersonsContext();
@@ -28,7 +26,7 @@ const DisplayPersons = () => {
             {/* Image Section */}
             <div className="relative h-48 bg-gray-100">
               <img
-                src={dummyImage}
+                src={person.image_url}
                 alt={`${person.first_name} ${person.surname}`}
                 className="w-full h-full object-cover"
               />

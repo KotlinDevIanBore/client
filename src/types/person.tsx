@@ -10,6 +10,8 @@ export interface Person {
     contact_person: string;
     contact_phone: string;
     contact_email: string;
+    image_url?: string;
+
   }
 
   export interface PersonWithoutId {
@@ -23,4 +25,5 @@ export interface Person {
     contact_person: string;
     contact_phone: string;
     contact_email: string;
+    image_url?: string;
 }

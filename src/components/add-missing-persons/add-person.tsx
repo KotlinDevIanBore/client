@@ -1,61 +1,12 @@
-import React, { useState } from "react";
-import { PersonWithoutId } from "../../types/person";
+import useAddPersonContext from "./hooks/use-add-person-context";
 
 const AddPerson = () => {
-  type PersonFieldNames = keyof PersonWithoutId;
-  const [input, setInput] = useState<Partial<PersonWithoutId>>({});
 
-  const formFields: Array<{
-    name: PersonFieldNames;
-    placeholder: string;
-    type: string;
-    required?: boolean;
-  }> = [
-    { name: "first_name", placeholder: "First name", type: "text", required: true },
-    { name: "middle_name", placeholder: "Middle name", type: "text" },
-    { name: "surname", placeholder: "Surname", type: "text", required: true },
-    { name: "age", placeholder: "Age", type: "number", required: true },
-    { name: "gender", placeholder: "Gender", type: "text", required: true },
-    {
-      name: "lastseen_location",
-      placeholder: "Last seen location",
-      type: "text",
-      required: true,
-    },
-    { name: "lastseen_date", placeholder: "Last seen date", type: "date", required: true },
-    { name: "contact_person", placeholder: "Contact person", type: "text", required: true },
-    { name: "contact_phone", placeholder: "Contact phone", type: "tel", required: true },
-    { name: "contact_email", placeholder: "Contact email", type: "email", required: true },
-  ];
+  const {handleChange,handleSubmit,formFields} =useAddPersonContext()
 
-  function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
-    const { value, name } = e.target;
-    setInput((prevInput) => ({ ...prevInput, [name]: value }));
-  }
+  
 
-  function handleSubmit(e: React.FormEvent) {
-    e.preventDefault();
-    
-    if (
-      input.first_name ||
-      input.middle_name ||
-      input.surname ||
-      input.age ||
-      input.gender ||
-      input.lastseen_location ||
-      input.lastseen_date ||
-      input.contact_person ||
-      input.contact_phone ||
-      input.contact_email
-    ) {
-      const formData = new FormData();
-      formFields.forEach((field) => {
-        formData.append(field.name, input[field.name] as string);
-      }) 
-      // Handle form submission here
-    }
-   
-  }
+  
 
   return (
     <div className="min-h-screen bg-gray-50 py-8 px-4 sm:px-6 lg:px-8">
